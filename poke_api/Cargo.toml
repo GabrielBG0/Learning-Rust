@@ -1,0 +1,14 @@
+[package]
+authors = ["Gabriel Borges Gutierrez <gabriel.bgs00@gmail.com>"]
+edition = "2018"
+name = "poke_api"
+version = "0.1.0"
+[dependencies]
+rocket = "0.4.7"
+rocket_contrib = { version = "0.4.7", features = ["json"] }
+serde = { version = "1.0.124", features = ["derive"] }
+serde_json = "1.0.64"
+
+[dependencies.rusqlite]
+features = ["bundled"]
+version = "0.24.2"
