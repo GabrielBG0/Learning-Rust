@@ -1,4 +1,4 @@
-mod triangle;
+mod moving_triangle;
 fn main() {
-    triangle::create_triangle();
+    moving_triangle::create_moving_triangle();
 }

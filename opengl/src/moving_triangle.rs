@@ -1,4 +1,4 @@
-use glium::{Surface, implement_vertex, Program, Display};
+use glium::{Surface, implement_vertex, Program, Display, uniform};
 use glutin::event::{Event, WindowEvent};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use glutin::window::WindowBuilder;
@@ -11,9 +11,9 @@ struct Vertex {
 
 implement_vertex!(Vertex, position);
 
-pub fn create_triangle(){
+pub fn create_moving_triangle(){
     let mut event_loop = EventLoop::new();
-    let wb = WindowBuilder::new().with_title("A Blue Screen With Red Triangle");
+    let wb = WindowBuilder::new().with_title("A Pink Screen With a Moving Triangle");
     let cb = ContextBuilder::new();
     let display = Display::new(wb, cb, &event_loop).unwrap();
 
@@ -25,15 +25,20 @@ pub fn create_triangle(){
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
     let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
+
     let vertex_shader_src = r#"
-        #version 140
+    #version 140
 
-        in vec2 position;
+    in vec2 position;
 
-        void main() {
-            gl_Position = vec4(position, 0.0, 1.0);
-        }
-    "#;
+    uniform float t;
+
+    void main() {
+        vec2 pos = position;
+        pos.x += t;
+        gl_Position = vec4(pos, 0.0, 1.0);
+    }
+"#;
 
     let fragment_shader_src = r#"
         #version 140
@@ -47,18 +52,9 @@ pub fn create_triangle(){
 
     let program = Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
 
+    let mut t: f32 = -0.5;
     event_loop.run(move |ev, _, control_flow| {
 
-        let mut target = display.draw();
-        target.clear_color(1.0, 0.0, 1.0, 1.0);
-        target.draw(&vertex_buffer, &indices, &program, &glium::uniforms::EmptyUniforms,
-            &Default::default()).unwrap();
-        target.finish().unwrap();
-
-        let next_frame_time = std::time::Instant::now() +
-            std::time::Duration::from_nanos(16_666_667);
-        
-        *control_flow = ControlFlow::WaitUntil(next_frame_time);
         match ev {
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested => {
@@ -69,6 +65,22 @@ pub fn create_triangle(){
             },
             _ => (),
         }
-    });
 
+        let next_frame_time = std::time::Instant::now() +
+            std::time::Duration::from_nanos(16_666_667);
+        *control_flow = ControlFlow::WaitUntil(next_frame_time);
+
+        // we update `t`
+        t += 0.0002;
+        if t > 0.5 {
+            t = -0.5;
+        }
+
+        let mut target = display.draw();
+        target.clear_color(1.0, 0.0, 1.0, 1.0);
+        let uniforms = uniform! { t: t };
+        target.draw(&vertex_buffer, &indices, &program, &uniforms,
+                    &Default::default()).unwrap();
+        target.finish().unwrap();
+    });
 }
