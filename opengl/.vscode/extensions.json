@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "matklad.rust-analyzer",
+    "statiolake.vscode-rustfmt"
+  ]
+}
