@@ -1,0 +1,5 @@
+{
+  "editor.defaultFormatter": "statiolake.vscode-rustfmt",
+  "editor.detectIndentation": false,
+  "editor.tabSize": 4
+}

@@ -1,4 +1,4 @@
-mod moving_triangle;
+mod colored_triangle;
 fn main() {
-    moving_triangle::create_moving_triangle();
+    colored_triangle::create_colored_triangle();
 }

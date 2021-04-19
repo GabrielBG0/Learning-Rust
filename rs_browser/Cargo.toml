@@ -1,0 +1,9 @@
+[package]
+name = "rs_browser"
+version = "0.1.0"
+authors = ["Gabriel Borges Gutierrez <gabriel.bgs00@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
